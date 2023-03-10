@@ -3,14 +3,14 @@ import "package:flutter_html/flutter_html.dart";
 import "../models/question.dart";
 import "package:cloud_firestore/cloud_firestore.dart";
 
-class Topics extends StatefulWidget {
-  const Topics({super.key});
+class Questions extends StatefulWidget {
+  const Questions({super.key});
 
   @override
-  State<Topics> createState() => _TopicsState();
+  State<Questions> createState() => _QuestionsState();
 }
 
-class _TopicsState extends State<Topics> {
+class _QuestionsState extends State<Questions> {
   List<Question> questions = [];
 
   @override
@@ -52,18 +52,19 @@ class _TopicsState extends State<Topics> {
                         .asMap()
                         .entries
                         .map((entry) => Card(
-                            color: entry.value.isCorrect
-                                ? Color.fromARGB(169, 38, 232, 45)
-                                : null, // CORRECT
-                            // color: Color.fromARGB(169, 232, 48, 38), // INCORRECT
-                            child: Padding(
+                                // color: entry.value.isCorrect
+                                //     ? Color.fromARGB(169, 38, 232, 45)
+                                //     : null, // CORRECT
+                                // color: Color.fromARGB(169, 232, 48, 38), // INCORRECT
+                                child: Padding(
                               padding: const EdgeInsets.all(4),
                               child: Row(children: [
                                 CircleAvatar(
                                   maxRadius: 20,
-                                  backgroundColor: entry.value.isCorrect
-                                      ? Colors.yellow
-                                      : // AFTER CLICK
+                                  backgroundColor:
+                                      //  entry.value.isCorrect
+                                      //     ? Colors.yellow:
+                                      //    AFTER CLICK
                                       Theme.of(context).colorScheme.primary,
                                   child: Text(("ABCDE"[entry.key])),
                                 ),
