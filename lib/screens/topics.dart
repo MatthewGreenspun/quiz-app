@@ -3,7 +3,7 @@ import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:provider/provider.dart';
 import 'package:quiz_app/global_store.dart';
 import 'package:quiz_app/widgets/app_bar_title.dart';
-import "./quiz.dart";
+import 'quiz_widget.dart';
 
 class Topics extends StatelessWidget {
   const Topics({super.key});
@@ -32,15 +32,15 @@ class Topics extends StatelessWidget {
                       child: Column(children: [
                         Container(
                             margin: const EdgeInsets.only(bottom: 16),
-                            width: 200,
-                            height: 200,
+                            width: 250,
+                            height: 250,
                             child: CircularProgressIndicator(
-                              value: 0.2,
+                              value: globalStore.progress,
                               strokeWidth: 8,
                               backgroundColor: Colors.grey[700],
                             )),
-                        const Text(
-                            "20% Completed") //TODO: Update based on user's progress
+                        Text(
+                            "${(globalStore.progress * 100).round()}% Completed")
                       ])),
                   const Text(
                     "Review",
@@ -60,13 +60,17 @@ class Topics extends StatelessWidget {
                                       children: [
                                         Text(
                                             "Unit ${entry.key} - ${entry.value}"),
+                                        globalStore.quizzes[entry.key] != null
+                                            ? Text(
+                                                "${globalStore.quizzes[entry.key]!.score} / ${globalStore.quizzes[entry.key]!.totalQuestions}")
+                                            : Container(),
                                         OutlinedButton(
                                             onPressed: () {
                                               Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) =>
-                                                          Quiz(
+                                                          QuizWidget(
                                                             unit: entry.key,
                                                             questions: globalStore
                                                                 .questions
@@ -80,9 +84,17 @@ class Topics extends StatelessWidget {
                                                 mainAxisAlignment:
                                                     MainAxisAlignment
                                                         .spaceBetween,
-                                                children: const [
-                                                  Icon(Icons.quiz),
-                                                  Text("Quiz")
+                                                children: [
+                                                  globalStore.quizzes[
+                                                              entry.key] ==
+                                                          null
+                                                      ? const Icon(Icons.quiz)
+                                                      : Container(),
+                                                  Text(globalStore.quizzes[
+                                                              entry.key] ==
+                                                          null
+                                                      ? "Quiz"
+                                                      : "Retake")
                                                 ]))
                                       ])),
                             ))

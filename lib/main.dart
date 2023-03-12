@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
           Provider<GlobalStore>(
             create: (_) => GlobalStore()
               ..listenForAuth()
-              ..getQuestions(),
+              ..getQuestions()
+              ..getQuizzes(),
           ),
         ],
         child: MaterialApp(

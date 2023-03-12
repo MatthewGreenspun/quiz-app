@@ -4,7 +4,13 @@ import "../models/question.dart";
 
 class QuestionViewer extends StatefulWidget {
   final Question question;
-  const QuestionViewer({super.key, required this.question});
+  final bool showAnswers;
+  final Function(bool) onSelectAnswer;
+  const QuestionViewer(
+      {super.key,
+      required this.question,
+      required this.showAnswers,
+      required this.onSelectAnswer});
 
   @override
   State<QuestionViewer> createState() => _QuestionViewerState();
@@ -16,14 +22,18 @@ class _QuestionViewerState extends State<QuestionViewer> {
   @override
   void didUpdateWidget(covariant QuestionViewer oldWidget) {
     setState(() {
-      _chosenAnswer = null;
+      if (oldWidget.showAnswers) {
+        //Reset chosen answer if the "next" button is pressed
+        //but not when "check" button is pressed
+        _chosenAnswer = null;
+      }
     });
     super.didUpdateWidget(oldWidget);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return ListView(
       children: [
         Html(
           data: widget.question.title,
@@ -33,9 +43,7 @@ class _QuestionViewerState extends State<QuestionViewer> {
             ) //TODO: Make monospace work
           },
         ),
-        Expanded(
-            child: ListView(
-          scrollDirection: Axis.vertical,
+        Column(
           children: widget.question.options
               .asMap()
               .entries
@@ -43,10 +51,11 @@ class _QuestionViewerState extends State<QuestionViewer> {
                   onTap: () {
                     setState(() {
                       _chosenAnswer = entry.key;
+                      widget.onSelectAnswer(entry.value.isCorrect);
                     });
                   },
                   child: Card(
-                      color: _chosenAnswer == null || entry.key != _chosenAnswer
+                      color: !widget.showAnswers || _chosenAnswer != entry.key
                           ? null
                           : entry.value.isCorrect
                               ? const Color.fromARGB(169, 38, 232, 45)
@@ -56,8 +65,7 @@ class _QuestionViewerState extends State<QuestionViewer> {
                         child: Row(children: [
                           CircleAvatar(
                             maxRadius: 20,
-                            backgroundColor: _chosenAnswer == null ||
-                                    entry.key != _chosenAnswer
+                            backgroundColor: entry.key != _chosenAnswer
                                 ? Theme.of(context).colorScheme.primary
                                 : Colors.yellow,
                             child: Text(
@@ -67,14 +75,13 @@ class _QuestionViewerState extends State<QuestionViewer> {
                           ),
                           Expanded(
                               child: Html(
-                                  data: _chosenAnswer == null ||
-                                          entry.key != _chosenAnswer
+                                  data: !widget.showAnswers
                                       ? entry.value.text
                                       : entry.value.explanation))
                         ]),
                       ))))
               .toList(),
-        ))
+        )
       ],
     );
   }
