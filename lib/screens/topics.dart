@@ -39,7 +39,8 @@ class Topics extends StatelessWidget {
                               strokeWidth: 8,
                               backgroundColor: Colors.grey[700],
                             )),
-                        const Text("20% Completed")
+                        const Text(
+                            "20% Completed") //TODO: Update based on user's progress
                       ])),
                   const Text(
                     "Review",

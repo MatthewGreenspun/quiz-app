@@ -65,7 +65,12 @@ class _QuestionViewerState extends State<QuestionViewer> {
                               style: const TextStyle(color: Colors.black),
                             ),
                           ),
-                          Expanded(child: Html(data: entry.value.text))
+                          Expanded(
+                              child: Html(
+                                  data: _chosenAnswer == null ||
+                                          entry.key != _chosenAnswer
+                                      ? entry.value.text
+                                      : entry.value.explanation))
                         ]),
                       ))))
               .toList(),

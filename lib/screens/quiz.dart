@@ -48,7 +48,8 @@ class _QuizState extends State<Quiz> {
                     ],
                   ),
                   body: QuestionViewer(
-                      question: widget._questions[_currentQuestion]),
+                    question: widget._questions[_currentQuestion],
+                  ),
                 )));
   }
 }
