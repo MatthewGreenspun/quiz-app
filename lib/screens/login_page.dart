@@ -11,7 +11,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.deepPurple,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(
@@ -37,10 +36,9 @@ class _SignInScreenState extends State<SignInScreen> {
                     ),
                     const SizedBox(height: 20),
                     const Text(
-                      'AP Computer Science Quiz',
+                      'AP Computer Science A',
                       textAlign: TextAlign.center,
                       style: TextStyle(
-                        color: Colors.yellow,
                         fontSize: 40,
                       ),
                     ),

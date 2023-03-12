@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:quiz_app/screens/info_page.dart';
+import 'package:quiz_app/screens/topics.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 
@@ -11,7 +11,7 @@ class Authentication {
       backgroundColor: Colors.black,
       content: Text(
         content,
-        style: TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
+        style: const TextStyle(color: Colors.redAccent, letterSpacing: 0.5),
       ),
     );
   }
@@ -26,9 +26,7 @@ class Authentication {
     if (user != null) {
       Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (context) => UserInfoScreen(
-            user: user,
-          ),
+          builder: (context) => const Topics(),
         ),
       );
     }
@@ -45,7 +43,7 @@ class Authentication {
 
       try {
         final UserCredential userCredential =
-        await auth.signInWithPopup(authProvider);
+            await auth.signInWithPopup(authProvider);
 
         user = userCredential.user;
       } catch (e) {
@@ -55,11 +53,11 @@ class Authentication {
       final GoogleSignIn googleSignIn = GoogleSignIn();
 
       final GoogleSignInAccount? googleSignInAccount =
-      await googleSignIn.signIn();
+          await googleSignIn.signIn();
 
       if (googleSignInAccount != null) {
         final GoogleSignInAuthentication googleSignInAuthentication =
-        await googleSignInAccount.authentication;
+            await googleSignInAccount.authentication;
 
         final AuthCredential credential = GoogleAuthProvider.credential(
           accessToken: googleSignInAuthentication.accessToken,
@@ -68,7 +66,7 @@ class Authentication {
 
         try {
           final UserCredential userCredential =
-          await auth.signInWithCredential(credential);
+              await auth.signInWithCredential(credential);
 
           user = userCredential.user;
         } on FirebaseAuthException catch (e) {
@@ -76,14 +74,14 @@ class Authentication {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
                 content:
-                'The account already exists with a different credential',
+                    'The account already exists with a different credential',
               ),
             );
           } else if (e.code == 'invalid-credential') {
             ScaffoldMessenger.of(context).showSnackBar(
               Authentication.customSnackBar(
                 content:
-                'Error occurred while accessing credentials. Try again.',
+                    'Error occurred while accessing credentials. Try again.',
               ),
             );
           }
