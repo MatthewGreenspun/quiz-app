@@ -53,7 +53,9 @@ class _GoogleSignInButtonState extends State<GoogleSignInButton> {
                               .doc(user.uid)
                               .get()
                               .then((doc) {
-                            if (doc.get("quizzes") == null) {
+                            try {
+                              doc.get("quizzes");
+                            } catch (err) {
                               FirebaseFirestore.instance
                                   .collection("users")
                                   .doc(user.uid)

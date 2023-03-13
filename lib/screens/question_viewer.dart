@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import "package:flutter_html/flutter_html.dart";
 import "../models/question.dart";
+import "package:google_fonts/google_fonts.dart";
 
 class QuestionViewer extends StatefulWidget {
   final Question question;
@@ -36,11 +37,15 @@ class _QuestionViewerState extends State<QuestionViewer> {
     return ListView(
       children: [
         Html(
-          data: widget.question.title,
+          data: widget.question.title
+              .replaceAll("indent:3", "indent3")
+              .replaceAll("indent:6", "indent6"),
           style: {
             ".inline_code, .code_line": Style(
-              fontFamily: "monospace",
-            ) //TODO: Make monospace work
+              fontFamily: GoogleFonts.sourceCodePro().fontFamily,
+            ),
+            ".indent3": Style(margin: const EdgeInsets.only(left: 18)),
+            ".indent6": Style(margin: const EdgeInsets.only(left: 36))
           },
         ),
         Column(
@@ -75,9 +80,22 @@ class _QuestionViewerState extends State<QuestionViewer> {
                           ),
                           Expanded(
                               child: Html(
-                                  data: !widget.showAnswers
-                                      ? entry.value.text
-                                      : entry.value.explanation))
+                            data: !widget.showAnswers
+                                ? entry.value.text
+                                    .replaceAll("indent:3", "indent3")
+                                    .replaceAll("indent:6", "indent6")
+                                : entry.value.explanation,
+                            style: {
+                              ".inline_code, .code_line": Style(
+                                fontFamily:
+                                    GoogleFonts.sourceCodePro().fontFamily,
+                              ),
+                              ".indent3": Style(
+                                  margin: const EdgeInsets.only(left: 18)),
+                              ".indent6":
+                                  Style(margin: const EdgeInsets.only(left: 36))
+                            },
+                          ))
                         ]),
                       ))))
               .toList(),
