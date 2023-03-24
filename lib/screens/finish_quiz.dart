@@ -30,7 +30,7 @@ class FinishQuiz extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          Image.asset("assets/logos/java.png")
+          Expanded(child: Image.asset("assets/logos/java.png"))
         ]));
   }
 }

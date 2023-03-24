@@ -5,12 +5,14 @@ class Quiz {
   int score;
   int totalQuestions;
   List<String> wrongQuestions;
+  DateTime timestamp;
 
   Quiz(
       {required this.unit,
       required this.score,
       required this.totalQuestions,
-      required this.wrongQuestions});
+      required this.wrongQuestions,
+      required this.timestamp});
 
   static fromFirebase(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
     return Quiz(
@@ -19,7 +21,8 @@ class Quiz {
         totalQuestions: doc.get("totalQuestions"),
         wrongQuestions: (doc.get("wrongQuestions") as List<dynamic>)
             .map((qId) => qId.toString())
-            .toList());
+            .toList(),
+        timestamp: (doc.get("timestamp") as Timestamp).toDate());
   }
 
   @override

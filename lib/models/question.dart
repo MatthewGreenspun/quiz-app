@@ -13,10 +13,13 @@ class Question {
   String title;
   int unit;
   List<Option> options;
+  int correctAnswers;
+  int totalAnswers;
 
-  Question(this.id, this.title, this.topic, this.unit, this.options);
+  Question(this.id, this.title, this.topic, this.unit, this.options,
+      this.correctAnswers, this.totalAnswers);
 
-  static fromFirebase(QueryDocumentSnapshot<Map<String, dynamic>> doc) {
+  static fromFirebase(dynamic doc) {
     return Question(
         doc.id,
         doc.get("title"),
@@ -25,14 +28,17 @@ class Question {
         (doc.get('options') as List<dynamic>)
             .map((option) => Option(
                 option['isCorrect'], option['text'], option['explanation']))
-            .toList());
+            .toList(),
+        // doc. get("correctAnswers") ?? 0,
+        doc.data()["correctAnswers"] ?? 0,
+        doc.data()["totalAnswers"] ?? 0);
+    // doc.get("totalAnswers") ?? 0);
   }
 
   @override
   String toString() {
     return """
-id: $id
-Unit $unit - $topic
+{ id: $id, unit: $unit, topic: $topic, correctAnswers: $correctAnswers, totalAnswers: $correctAnswers }
 """;
   }
 }

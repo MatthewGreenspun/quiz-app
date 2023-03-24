@@ -9,7 +9,7 @@ class GlobalStore = _GlobalStore with _$GlobalStore;
 
 abstract class _GlobalStore with Store {
   final questions = ObservableList<Question>();
-  final quizzes = ObservableMap<int, Quiz>();
+  final quizzes = ObservableMap<int, ObservableList<Quiz>>();
 
   @observable
   User? user;
@@ -17,8 +17,8 @@ abstract class _GlobalStore with Store {
   @computed
   double get progress {
     if (questions.isEmpty) return 0;
-    return quizzes.entries.fold(
-            0, (previousValue, entry) => previousValue + entry.value.score) /
+    return quizzes.entries.fold(0,
+            (previousValue, entry) => previousValue + entry.value.last.score) /
         questions.length;
   }
 
@@ -70,9 +70,20 @@ abstract class _GlobalStore with Store {
       quizzes.clear();
       for (int i = 0; i < q.docs.length; i++) {
         final doc = q.docs[i];
-        quizzes[doc.get("unit")] = Quiz.fromFirebase(doc);
+        final unit = doc.get("unit") as int;
+        if (quizzes.containsKey(unit)) {
+          quizzes[unit]!.add(Quiz.fromFirebase(doc));
+        } else {
+          quizzes[unit] = ObservableList.of([Quiz.fromFirebase(doc)]);
+        }
       }
-    });
+    }).then((_) => {
+              quizzes.values.forEach((unitQuizzes) {
+                unitQuizzes.sort((Quiz a, Quiz b) =>
+                    a.timestamp.millisecondsSinceEpoch -
+                    b.timestamp.millisecondsSinceEpoch);
+              })
+            });
   }
 
   @action
@@ -83,6 +94,27 @@ abstract class _GlobalStore with Store {
       "score": quiz.score,
       "totalQuestions": quiz.totalQuestions,
       "wrongQuestions": quiz.wrongQuestions,
+      "timestamp": FieldValue.serverTimestamp()
     }).then((_) => getQuizzes());
+  }
+
+  @action
+  Future<void> setQuestionStats(Question question, bool isCorrect) async {
+    //get the updated question in case there is stale data
+    final fbQuestion = await FirebaseFirestore.instance
+        .collection("questions")
+        .doc(question.id)
+        .get();
+    final currentQuestion = Question.fromFirebase(fbQuestion as dynamic);
+
+    await FirebaseFirestore.instance
+        .collection("questions")
+        .doc(question.id)
+        .set({
+      "totalAnswers": currentQuestion.totalAnswers + 1,
+      "correctAnswers": isCorrect
+          ? currentQuestion.correctAnswers + 1
+          : currentQuestion.correctAnswers
+    }, SetOptions(merge: true));
   }
 }

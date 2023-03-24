@@ -124,23 +124,33 @@ class _QuizWidgetState extends State<QuizWidget> {
                                       setState(() {
                                         setState(() {
                                           if (_isAnswering) {
+                                            // Button shows "Check"
                                             _isAnswering = false;
                                             _questionProgress[
                                                     _currentQuestion] =
                                                 _selectedAnswerIsCorrect;
+                                            globalStore.setQuestionStats(
+                                                widget._questions[
+                                                    _currentQuestion],
+                                                _selectedAnswerIsCorrect);
                                             _selectedAnswerIsCorrect = false;
                                           } else {
+                                            // Button shows "Next"
                                             _isAnswering = true;
                                             _currentQuestion += 1;
                                             if (_currentQuestion ==
                                                 widget._questions.length) {
+                                              // Last question is answered
                                               globalStore.setQuizProgress(Quiz(
                                                   unit: widget._unit,
                                                   score: calculateScore(),
                                                   totalQuestions:
                                                       widget._questions.length,
                                                   wrongQuestions:
-                                                      getWrongQuestions()));
+                                                      getWrongQuestions(),
+                                                  timestamp: DateTime.now()));
+                                              globalStore
+                                                  .getQuestions(); // Get updated questions so that correctAnswers and totalAnswers are correct
                                             }
                                           }
                                         });

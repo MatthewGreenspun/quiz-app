@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:quiz_app/global_store.dart';
 import 'package:quiz_app/widgets/app_bar_title.dart';
 import 'quiz_widget.dart';
+import "../widgets/progress.dart";
 
 class Topics extends StatelessWidget {
   const Topics({super.key});
@@ -21,34 +22,20 @@ class Topics extends StatelessWidget {
                   const SizedBox(
                     height: 20,
                   ),
-                  Text(
-                    "Welcome, ${globalStore.user?.displayName}!",
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(fontSize: 30),
-                  ),
-                  Container(
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 40),
-                      child: Column(children: [
-                        Container(
-                            margin: const EdgeInsets.only(bottom: 16),
-                            width: 250,
-                            height: 250,
-                            child: CircularProgressIndicator(
-                              value: globalStore.progress,
-                              strokeWidth: 8,
-                              backgroundColor: Colors.grey[700],
-                            )),
-                        Text(
-                            "${(globalStore.progress * 100).round()}% Completed")
-                      ])),
-                  const Text(
-                    "Review",
-                    style: TextStyle(fontSize: 30),
-                  ),
                   Expanded(
-                      child: ListView(
-                    children: globalStore.units.entries
+                      child: ListView(shrinkWrap: true, children: [
+                    Text(
+                      "Welcome, ${globalStore.user?.displayName}!",
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(fontSize: 30),
+                    ),
+                    Progress(progress: globalStore.progress),
+                    const Text(
+                      "Review",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(fontSize: 30),
+                    ),
+                    ...globalStore.units.entries
                         .map((entry) => Card(
                               child: Padding(
                                   padding: const EdgeInsets.all(8),
@@ -58,11 +45,15 @@ class Topics extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        Text(
-                                            "Unit ${entry.key} - ${entry.value}"),
+                                        Expanded(
+                                            flex: 3,
+                                            child: Text(
+                                                "Unit ${entry.key} - ${entry.value}")),
                                         globalStore.quizzes[entry.key] != null
-                                            ? Text(
-                                                "${globalStore.quizzes[entry.key]!.score} / ${globalStore.quizzes[entry.key]!.totalQuestions}")
+                                            ? Expanded(
+                                                flex: 1,
+                                                child: Text(
+                                                    "${globalStore.quizzes[entry.key]!.last.score} / ${globalStore.quizzes[entry.key]!.last.totalQuestions}"))
                                             : Container(),
                                         OutlinedButton(
                                             onPressed: () {
@@ -99,7 +90,7 @@ class Topics extends StatelessWidget {
                                       ])),
                             ))
                         .toList(),
-                  )),
+                  ])),
                 ]),
               ),
             ));
