@@ -53,7 +53,8 @@ class _QuestionViewerState extends State<QuestionViewer> {
                       fontFamily: GoogleFonts.sourceCodePro().fontFamily,
                     ),
                     ".indent3": Style(margin: const EdgeInsets.only(left: 18)),
-                    ".indent6": Style(margin: const EdgeInsets.only(left: 36))
+                    ".indent6": Style(margin: const EdgeInsets.only(left: 36)),
+                    "span": Style(margin: const EdgeInsets.only(left: 18))
                   },
                 ),
                 Column(
