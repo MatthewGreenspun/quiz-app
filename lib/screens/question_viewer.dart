@@ -4,6 +4,7 @@ import "package:provider/provider.dart";
 import "package:quiz_app/global_store.dart";
 import "../models/question.dart";
 import "package:google_fonts/google_fonts.dart";
+import "../../utils.dart";
 
 class QuestionViewer extends StatefulWidget {
   final Question question;
@@ -21,9 +22,11 @@ class QuestionViewer extends StatefulWidget {
 
 class _QuestionViewerState extends State<QuestionViewer> {
   int? _chosenAnswer;
+  List<Option> _options = [];
 
   @override
   void initState() {
+    _options = shuffle(widget.question.options);
     super.initState();
   }
 
@@ -34,6 +37,7 @@ class _QuestionViewerState extends State<QuestionViewer> {
         //Reset chosen answer if the "next" button is pressed
         //but not when "check" button is pressed
         _chosenAnswer = null;
+        _options = shuffle(widget.question.options);
       }
     });
     super.didUpdateWidget(oldWidget);
@@ -58,7 +62,7 @@ class _QuestionViewerState extends State<QuestionViewer> {
                   },
                 ),
                 Column(
-                  children: widget.question.options
+                  children: _options
                       .asMap()
                       .entries
                       .map((entry) => GestureDetector(

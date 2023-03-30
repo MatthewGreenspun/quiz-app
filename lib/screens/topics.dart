@@ -5,6 +5,7 @@ import 'package:quiz_app/global_store.dart';
 import 'package:quiz_app/widgets/app_bar_title.dart';
 import 'quiz_widget.dart';
 import "../widgets/progress.dart";
+import "../../utils.dart";
 
 class Topics extends StatelessWidget {
   const Topics({super.key});
@@ -63,12 +64,14 @@ class Topics extends StatelessWidget {
                                                       builder: (context) =>
                                                           QuizWidget(
                                                             unit: entry.key,
-                                                            questions: globalStore
-                                                                .questions
-                                                                .where((q) =>
-                                                                    q.unit ==
-                                                                    entry.key)
-                                                                .toList(),
+                                                            questions: shuffle(
+                                                                globalStore
+                                                                    .questions
+                                                                    .where((q) =>
+                                                                        q.unit ==
+                                                                        entry
+                                                                            .key)
+                                                                    .toList()),
                                                           )));
                                             },
                                             child: Row(
